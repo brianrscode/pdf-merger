@@ -6,10 +6,12 @@ import PyPDF2
 ruta_actual = os.getcwd()
 
 def existen_pdfs(lista_pdfs:list[str]):
-    return all(os.path.exists(os.path.join(ruta_actual, archivo)) for archivo in lista_pdfs)
+    """Verifica si existen los PDF's que se pasaron como parámetros"""
+    return all(os.path.exists(os.path.join(ruta_actual, pdf)) for pdf in lista_pdfs)
 
 
 def unir_pdfs(lista_pdfs:list[str], nombre_pdf_salida:str):
+    """Unir los PDF's que se pasaron como parámetros"""
     try:
         pdf_final = PyPDF2.PdfMerger()
         for archivo in lista_pdfs:
@@ -18,7 +20,7 @@ def unir_pdfs(lista_pdfs:list[str], nombre_pdf_salida:str):
         pdf_final.write(nombre_pdf_salida)
         pdf_final.close()
     except Exception as e:
-        print(f"Hubo un herror al unir los PDF's: {lista_pdfs[:]}")
+        print(f"Hubo un error al unir los PDF's: {lista_pdfs[:]}\n{e}")
     else:
         print("Los PDF's se unieron correctamente")
 
@@ -32,8 +34,11 @@ def main() -> None:
         return
 
     if not existen_pdfs(lista_pdfs):
-        print("No existe alguno de los PDF's")
+        print("No existen los PDF's que se pasaron como parámetros")
         return
+
+    if not nombre_pdf_salida.endswith(".pdf"):
+        nombre_pdf_salida += ".pdf"
 
     unir_pdfs(lista_pdfs, nombre_pdf_salida)
 
